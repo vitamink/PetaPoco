@@ -1954,8 +1954,10 @@ namespace PetaPoco
 						}
 						else
 						{
-							// var poco=new T()
-							il.Emit(OpCodes.Newobj, type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[0], null));
+                            // var poco=new T()
+                            ConstructorInfo con = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[0], null);
+                            if (con == null) throw new ArgumentException(string.Format("Type {0} does not have a default constructor.", type.FullName));
+                            il.Emit(OpCodes.Newobj, con);
 
 							// Enumerate all fields generating a set assignment for the column
 							for (int i = firstColumn; i < firstColumn + countColumns; i++)
